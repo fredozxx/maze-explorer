@@ -1,0 +1,84 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+
+using namespace std;
+
+// Function to print the maze
+void printMaze(char maze[5][5], int playerX, int playerY) {
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 5; j++) {
+            if (i == playerX && j == playerY) {
+                cout << "P"; // P represents the player
+            } else {
+                cout << maze[i][j];
+            }
+        }
+        cout << endl;
+    }
+}
+
+// Function to check if the position is valid for movement
+bool isValidMove(char maze[5][5], int x, int y) {
+    return (x >= 0 && x < 5 && y >= 0 && y < 5 && maze[x][y] != '#');
+}
+
+int main() {
+    // Initialize random seed
+    srand(time(0));
+
+    // Define a 5x5 maze with walls and paths
+    char maze[5][5] = {
+        {'#', '#', '#', '#', '#'},
+        {'#', '.', '#', '.', '#'},
+        {'#', '.', '#', '.', '#'},
+        {'#', '.', '.', '.', '#'},
+        {'#', '#', '#', '#', '#'}
+    };
+
+    int playerX = 1, playerY = 1; // Starting position of the player
+    int exitX = 3, exitY = 3; // Exit position
+
+    char move;
+    bool gameWon = false;
+
+    // Main game loop
+    while (!gameWon) {
+        system("clear"); // Clear screen for better visibility (use "cls" for Windows)
+        printMaze(maze, playerX, playerY);
+
+        // Ask the player for their next move
+        cout << "Use W to move up, S to move down, A to move left, D to move right.\n";
+        cout << "Enter your move (W/S/A/D): ";
+        cin >> move;
+
+        if (move == 'W' || move == 'w') {
+            if (isValidMove(maze, playerX - 1, playerY)) {
+                playerX--;
+            }
+        } else if (move == 'S' || move == 's') {
+            if (isValidMove(maze, playerX + 1, playerY)) {
+                playerX++;
+            }
+        } else if (move == 'A' || move == 'a') {
+            if (isValidMove(maze, playerX, playerY - 1)) {
+                playerY--;
+            }
+        } else if (move == 'D' || move == 'd') {
+            if (isValidMove(maze, playerX, playerY + 1)) {
+                playerY++;
+            }
+        } else {
+            cout << "Invalid move. Please enter W, S, A, or D.\n";
+            continue;
+        }
+
+        // Check if the player has reached the exit
+        if (playerX == exitX && playerY == exitY) {
+            gameWon = true;
+            cout << "Congratulations! You've escaped the dungeon!\n";
+        }
+    }
+
+    return 0;
+}
